@@ -1,0 +1,37 @@
+name: greenpage carbon budget
+description: Estimate the carbon footprint of your built site and fail when pages exceed a budget.
+branding:
+  icon: feather
+  color: green
+inputs:
+  target:
+    description: Build directory, HTML file, or URL to scan
+    required: true
+  budget:
+    description: Maximum grams CO2e per page view
+    required: false
+    default: ""
+  green-host:
+    description: Set to "true" if the site is hosted on renewable energy
+    required: false
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - shell: bash
+      run: pip install --quiet "$GITHUB_ACTION_PATH"
+    - shell: bash
+      env:
+        TARGET: ${{ inputs.target }}
+        BUDGET: ${{ inputs.budget }}
+        GREEN_HOST: ${{ inputs.green-host }}
+      run: |
+        args=(scan "$TARGET" --format markdown)
+        [ -n "$BUDGET" ] && args+=(--budget "$BUDGET")
+        [ "$GREEN_HOST" = "true" ] && args+=(--green-host)
+        set +e
+        greenpage "${args[@]}" | tee -a "$GITHUB_STEP_SUMMARY"
+        exit "${PIPESTATUS[0]}"

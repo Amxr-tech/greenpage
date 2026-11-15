@@ -26,7 +26,9 @@ def suggestions(scan: PageScan) -> list[str]:
             tips.append(f"{r.url} is {r.bytes // KB} kB; use preload=\"none\" or a poster so it only loads on demand.")
 
     if by_kind.get("script", 0) > 300 * KB:
-        tips.append(f"JavaScript totals {by_kind['script'] // KB} kB; consider code-splitting or removing unused libraries.")
+        tips.append(
+            f"JavaScript totals {by_kind['script'] // KB} kB; consider code-splitting or removing unused libraries."
+        )
     if by_kind.get("font", 0) > 150 * KB:
         tips.append(f"Web fonts total {by_kind['font'] // KB} kB; subset them or prefer system fonts.")
     return tips

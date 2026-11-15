@@ -60,7 +60,8 @@ def _print_text(results: list[dict], args: argparse.Namespace) -> None:
     for r in results:
         flag = "  OVER BUDGET" if r["over_budget"] else ""
         print(f"\n{r['page']}")
-        print(f"  {_human(r['bytes'])} transferred · {_grams(r['grams_co2e'])} g CO2e/view · rating {r['rating']}{flag}")
+        grams = _grams(r["grams_co2e"])
+        print(f"  {_human(r['bytes'])} transferred · {grams} g CO2e/view · rating {r['rating']}{flag}")
         if r["yearly_kg_co2e"] is not None:
             print(f"  ≈ {r['yearly_kg_co2e']} kg CO2e/year at {args.views:,} views/month")
         heaviest = [x for x in r["resources"] if x["bytes"]][: args.top]

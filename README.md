@@ -2,7 +2,7 @@
 
 **Estimate and budget the carbon footprint of web pages, locally or in CI.**
 
-[![CI](https://github.com/OWNER/greenpage/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/greenpage/actions/workflows/ci.yml)
+[![CI](https://github.com/Amxr-tech/greenpage/actions/workflows/ci.yml/badge.svg)](https://github.com/Amxr-tech/greenpage/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
@@ -24,7 +24,7 @@ greenpage adds a **carbon budget** that stops pages from quietly getting heavier
 ```bash
 pip install greenpage        # once published to PyPI
 # or from source
-pip install git+https://github.com/OWNER/greenpage
+pip install git+https://github.com/Amxr-tech/greenpage
 ```
 
 ## Usage
@@ -70,7 +70,7 @@ index.html
 ```yaml
 - uses: actions/checkout@v4
 - run: npm ci && npm run build
-- uses: OWNER/greenpage@v0
+- uses: Amxr-tech/greenpage@v0
   with:
     target: dist
     budget: "0.2"

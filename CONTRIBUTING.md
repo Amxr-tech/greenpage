@@ -5,7 +5,7 @@ Thanks for helping make the web lighter! All contributions are welcome: code, do
 ## Development setup
 
 ```bash
-git clone https://github.com/OWNER/greenpage && cd greenpage
+git clone https://github.com/Amxr-tech/greenpage && cd greenpage
 python -m venv .venv && source .venv/bin/activate
 pip install -e '.[dev]'
 pytest

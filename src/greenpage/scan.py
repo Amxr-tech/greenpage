@@ -14,7 +14,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
 
-USER_AGENT = "greenpage (+https://github.com/greenpage-dev/greenpage)"
+USER_AGENT = "greenpage (+https://github.com/Amxr-tech/greenpage)"
 TIMEOUT = 15
 
 _LINK_RELS = {"stylesheet", "icon", "preload", "modulepreload", "manifest", "apple-touch-icon"}

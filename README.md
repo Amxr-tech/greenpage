@@ -22,7 +22,7 @@ greenpage adds a **carbon budget** that stops pages from quietly getting heavier
 ## Install
 
 ```bash
-pip install greenpage        # once published to PyPI
+pip install greenpage
 # or from source
 pip install git+https://github.com/Amxr-tech/greenpage
 ```
@@ -97,7 +97,11 @@ greenpage implements the **Sustainable Web Design Model v4**:
 2. **Energy.** Bytes are converted to energy at 0.194 kWh/GB operational and 0.106 kWh/GB embodied,
    split across data centres, networks and user devices.
 3. **Carbon.** Energy is multiplied by grid intensity: 494 gCO₂e/kWh global average by default, configurable
-   with `--grid-intensity`. With `--green-host`, data-centre operational energy uses 50 gCO₂e/kWh.
+   with `--grid-intensity`. Embodied energy always uses the global average.
+4. **Green hosting.** Data-centre operational emissions are multiplied by `1 - green hosting factor`.
+   `--green-host` sets the factor to 1, as SWD v4 prescribes for hosts verified by the
+   [Green Web Foundation](https://www.thegreenwebfoundation.org/). The Python API also accepts a partial
+   `green_hosting_factor` (0–1).
 
 All constants live in [`src/greenpage/model.py`](src/greenpage/model.py).
 

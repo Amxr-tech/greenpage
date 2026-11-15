@@ -28,8 +28,6 @@ EMBODIED_KWH_PER_GB = {
 
 # Global average grid intensity in gCO2e/kWh (Ember, used by SWD v4).
 GLOBAL_GRID_INTENSITY = 494.0
-# Intensity applied to data-centre operational energy for verified green hosts.
-RENEWABLE_GRID_INTENSITY = 50.0
 
 # SWD v4 digital carbon rating: upper bound in grams CO2e per page view.
 RATINGS = (
@@ -64,13 +62,23 @@ def estimate(
     num_bytes: int,
     *,
     green_hosting: bool = False,
+    green_hosting_factor: float | None = None,
     grid_intensity: float = GLOBAL_GRID_INTENSITY,
 ) -> Estimate:
-    """Estimate the emissions of transferring ``num_bytes`` for one page view."""
+    """Estimate the emissions of transferring ``num_bytes`` for one page view.
+
+    ``green_hosting_factor`` is the share (0-1) of hosting powered by renewable
+    or zero-carbon energy; ``green_hosting=True`` is shorthand for 1.0, which
+    SWD v4 prescribes for hosts verified by the Green Web Foundation.
+    """
     if num_bytes < 0:
         raise ValueError("num_bytes must be non-negative")
     if grid_intensity < 0:
         raise ValueError("grid_intensity must be non-negative")
+    if green_hosting_factor is None:
+        green_hosting_factor = 1.0 if green_hosting else 0.0
+    if not 0 <= green_hosting_factor <= 1:
+        raise ValueError("green_hosting_factor must be between 0 and 1")
 
     gb = num_bytes / BYTES_PER_GB
     total_kwh = 0.0
@@ -78,12 +86,10 @@ def estimate(
     for segment in OPERATIONAL_KWH_PER_GB:
         op_kwh = gb * OPERATIONAL_KWH_PER_GB[segment]
         emb_kwh = gb * EMBODIED_KWH_PER_GB[segment]
-        op_intensity = (
-            RENEWABLE_GRID_INTENSITY
-            if green_hosting and segment == "data_centre"
-            else grid_intensity
-        )
+        op_grams = op_kwh * grid_intensity
+        if segment == "data_centre":
+            op_grams *= 1 - green_hosting_factor
         total_kwh += op_kwh + emb_kwh
         # Embodied emissions happened at manufacture, so use the global grid.
-        grams += op_kwh * op_intensity + emb_kwh * GLOBAL_GRID_INTENSITY
+        grams += op_grams + emb_kwh * GLOBAL_GRID_INTENSITY
     return Estimate(bytes=num_bytes, energy_kwh=total_kwh, grams_co2e=grams)
